@@ -77,6 +77,13 @@ import { ThemeToggle } from "@/components/qce-dashboard/theme-toggle"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { DUR, EASE, makeStagger } from "@/components/qce-dashboard/animations"
 
+function formatWorkingEnv(workingEnv?: string, workingEnvLabel?: string) {
+  if (workingEnvLabel && workingEnvLabel !== "未知") return workingEnvLabel
+  if (workingEnv === "framework") return "插件模式"
+  if (workingEnv === "shell") return "本机运行"
+  return "macOS 菜单栏"
+}
+
 export default function QCEDashboard() {
   const [activeTab, setActiveTabState] = useState("overview")
   const [isTaskWizardOpen, setIsTaskWizardOpen] = useState(false)
@@ -218,7 +225,7 @@ export default function QCEDashboard() {
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const res = await fetch('https://api.github.com/repos/shuakami/qq-chat-exporter')
+        const res = await fetch('https://api.github.com/repos/sudo-yf/qq-chat-exporter')
         if (res.ok) {
           const data = await res.json()
           setGithubStars(data.stargazers_count)
@@ -1005,7 +1012,7 @@ export default function QCEDashboard() {
     }
   }
 
-  // Issue #340：独立模式（start-standalone.bat 启动、没有 NapCat / QQ 登录态）
+  // Issue #340：独立模式（没有 NapCat / QQ 登录态）
   // 下，/api/friends 和 /api/groups 只会回 503 STANDALONE_MODE，没必要发请求；
   // 「会话」一类需要登录态的页面也直接换成引导卡片。
   const isStandalone = systemInfo?.mode === "standalone"
@@ -1283,7 +1290,7 @@ export default function QCEDashboard() {
               <div className="flex-shrink-0 px-2 pb-2 space-y-1">
                 <div className="flex items-center justify-between px-2 py-1">
                   <a
-                    href="https://sdjz.wiki/post/qce%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C"
+                    href="https://github.com/sudo-yf/qq-chat-exporter/blob/master/docs/guide.md"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[12px] text-muted-foreground/60 hover:text-muted-foreground transition-colors flex items-center gap-1"
@@ -1294,7 +1301,7 @@ export default function QCEDashboard() {
                   <div className="flex items-center gap-1.5">
                     <ThemeToggle />
                     <a
-                      href="https://github.com/shuakami/qq-chat-exporter"
+                      href="https://github.com/sudo-yf/qq-chat-exporter"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-2 py-1 text-[12px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
@@ -1533,12 +1540,8 @@ export default function QCEDashboard() {
                       <div className="flex items-center gap-2 mt-0.5 text-sm text-muted-foreground">
                         <span>QQ {systemInfo.napcat.selfInfo.uin}</span>
                         <span className="text-muted-foreground/30">·</span>
-                        {systemInfo?.napcat.workingEnv && (
-                          <>
-                            <span>{systemInfo.napcat.workingEnv === 'framework' ? 'Framework' : systemInfo.napcat.workingEnv === 'shell' ? 'Shell' : '未知'}</span>
-                            <span className="text-muted-foreground/30">·</span>
-                          </>
-                        )}
+                        <span>{formatWorkingEnv(systemInfo?.napcat.workingEnv, systemInfo?.napcat.workingEnvLabel)}</span>
+                        <span className="text-muted-foreground/30">·</span>
                         <span>{wsConnected ? "已连接" : "未连接"}</span>
                         <span className="text-muted-foreground/30">·</span>
                         <span>{systemInfo?.napcat.online ? "QQ在线" : "QQ离线"}</span>
@@ -1693,7 +1696,7 @@ export default function QCEDashboard() {
                         className="h-8 text-[13px] rounded-full px-3"
                         onClick={() =>
                           window.open(
-                            "https://github.com/shuakami/qq-chat-exporter#standalone",
+                            "https://github.com/sudo-yf/qq-chat-exporter/blob/master/docs/guide.md",
                             "_blank",
                           )
                         }
@@ -2626,7 +2629,7 @@ export default function QCEDashboard() {
                 {/* Actions */}
                 <div className="flex items-center gap-3">
                   <Button 
-                    onClick={() => window.open('https://github.com/shuakami/qq-chat-exporter', '_blank')}
+                    onClick={() => window.open('https://github.com/sudo-yf/qq-chat-exporter', '_blank')}
                     className="rounded-full"
                   >
                     <Star className="w-4 h-4 mr-1.5" />

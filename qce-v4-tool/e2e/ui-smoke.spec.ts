@@ -428,7 +428,7 @@ test.describe('Auth validation resilience (issue #346)', () => {
 });
 
 /**
- * Issue #340: 独立模式（start-standalone.bat）下没有 NapCat / QQ 登录态。
+ * Issue #340: 独立模式下没有 NapCat / QQ 登录态。
  * 老版本进入 sessions 标签页会立刻发起 /api/friends + /api/groups，两个端点
  * 都回 503 STANDALONE_MODE，前端在右上角连弹两次红色 toast，且 SessionList
  * 卡在「加载中」。这里通过路由拦截把 /api/system/info 的 mode 改成 'standalone'，

@@ -10,7 +10,7 @@ import type {
 import { toast, type ToastAction } from "@/components/ui/toast"
 import { useApi } from "./use-api"
 
-const GITHUB_URL = "https://github.com/shuakami/qq-chat-exporter"
+const GITHUB_URL = "https://github.com/sudo-yf/qq-chat-exporter"
 
 type TaskStatus = "running" | "completed" | "failed"
 

@@ -5,7 +5,7 @@
 你需要安装 Node.js 18 或更高版本，以及 Git。然后把项目克隆到本地：
 
 ```bash
-git clone https://github.com/shuakami/qq-chat-exporter.git
+git clone https://github.com/sudo-yf/qq-chat-exporter.git
 cd qq-chat-exporter
 ```
 
@@ -17,7 +17,7 @@ cd qq-chat-exporter
 
 前端界面在 `qce-v4-tool/` 目录下，是一个 Next.js 应用，使用 Tailwind CSS 做样式。
 
-如果想深入了解架构和 API，可以查看 [DeepWiki 文档](https://deepwiki.com/shuakami/qq-chat-exporter)。
+如果想深入了解架构和 API，可以查看 [DeepWiki 文档](https://deepwiki.com/sudo-yf/qq-chat-exporter)。
 
 ## 本地开发
 
@@ -29,7 +29,16 @@ pnpm install
 pnpm dev
 ```
 
-后端插件需要在 NapCat 环境下运行。你需要先去 [NapCatQQ](https://github.com/NapNeko/NapCatQQ) 下载 Shell 版本，然后把 `plugins/qq-chat-exporter` 目录复制到 NapCat 的 plugins 目录下。
+后端插件需要在本项目的 macOS 运行包中调试。日常使用请先运行根目录的 `打开真实QQ导出器.command`，它会构建菜单栏启动器，并把 `NapCat-QCE-macOS-arm64/QQ-QCE.app` 强制绑定到菜单栏图标。
+
+如果你只改前端，可以让前端开发服务器连接本机 QCE 接口：
+
+```bash
+cd qce-v4-tool
+pnpm dev
+```
+
+如果你改了后端插件，请在 `plugins/qq-chat-exporter/` 下运行测试和构建，再通过菜单栏启动器重启 QCE 验证。
 
 ## 提交代码
 

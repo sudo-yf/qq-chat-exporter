@@ -213,7 +213,7 @@ export default function AuthPage() {
             {/* Footer */}
             <div className="mt-6 text-center">
               <a
-                href="https://github.com/shuakami/qq-chat-exporter"
+                href="https://github.com/sudo-yf/qq-chat-exporter"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground/70 hover:text-muted-foreground transition-colors"
@@ -261,7 +261,7 @@ export default function AuthPage() {
                   令牌是一串随机字符，用来验证你的身份。每次启动 NapCat / QCE 时会自动生成一个新的。
                 </p>
 
-                {/* Issue #287: 一键登录是 Framework 用户最省心的入口，先讲它 */}
+                {/* macOS 菜单栏启动器会自动带 token 打开登录页，一键登录仍保留给手动排查 */}
                 <div className="space-y-3">
                   <p className="text-[13px] font-medium text-foreground">最快的方式：用一键登录链接（推荐）</p>
                   <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -283,12 +283,12 @@ export default function AuthPage() {
                 </div>
 
                 <div className="space-y-3 pt-2 border-t border-black/[0.04] dark:border-white/[0.04]">
-                  <p className="text-[13px] font-medium text-foreground">从 security.json 找（Framework 模式）</p>
+                  <p className="text-[13px] font-medium text-foreground">从 security.json 找（macOS）</p>
                   <p className="text-muted-foreground text-[13px] leading-relaxed">
-                    Framework 模式下控制台不一定常驻，可以按 <span className="font-mono bg-black/[0.04] dark:bg-white/[0.06] px-1.5 py-0.5 rounded text-foreground">Win + R</span> 输入：
+                    菜单栏启动器会自动读取这个文件。如果需要手动查看，可以在 Finder 里按 <span className="font-mono bg-black/[0.04] dark:bg-white/[0.06] px-1.5 py-0.5 rounded text-foreground">⌘ + Shift + G</span> 输入：
                   </p>
                   <div className="rounded-lg bg-neutral-900 dark:bg-neutral-950 p-3 font-mono text-xs overflow-x-auto">
-                    <span className="text-green-400">%USERPROFILE%\.qq-chat-exporter</span>
+                    <span className="text-green-400">~/.qq-chat-exporter</span>
                   </div>
                   <p className="text-muted-foreground text-[13px] leading-relaxed">
                     打开里面的 <span className="font-mono bg-black/[0.04] dark:bg-white/[0.06] px-1.5 py-0.5 rounded text-foreground">security.json</span>，找到 <span className="font-mono bg-black/[0.04] dark:bg-white/[0.06] px-1.5 py-0.5 rounded text-foreground">accessToken</span> 字段，复制对应的字符串值即可。

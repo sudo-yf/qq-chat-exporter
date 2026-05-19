@@ -1629,7 +1629,7 @@ ${this.generateFooter()}
                     </div>
                 </div>
                 <div class="toolbar-separator"></div>
-                <a href="https://github.com/shuakami/qq-chat-exporter" target="_blank" class="github-btn" title="GitHub">
+                <a href="https://github.com/sudo-yf/qq-chat-exporter" target="_blank" class="github-btn" title="GitHub">
                     <i data-lucide="github"></i>
                 </a>
                 <div class="toolbar-separator"></div>
@@ -1919,7 +1919,7 @@ ${this.generateFooter()}
             <div class="footer-info">
                 <p class="footer-copyright">Made with ❤️ by <strong>shuakami</strong></p>
                 <p class="footer-links">
-                    <a href="https://github.com/shuakami/qq-chat-exporter" target="_blank">GitHub</a>
+                    <a href="https://github.com/sudo-yf/qq-chat-exporter" target="_blank">GitHub</a>
                     <span class="separator">·</span>
                     <span>GPL-3.0 License</span>
                 </p>

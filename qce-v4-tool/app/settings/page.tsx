@@ -110,11 +110,11 @@ export default function SettingsPage() {
             <CardTitle>使用说明</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>• 路径可以是绝对路径（如 D:\QQ-Exports）或相对路径</p>
-            <p>• Windows 系统使用反斜杠（\）或正斜杠（/）均可</p>
+            <p>• 路径可以是绝对路径（如 /Users/你的名字/Documents/QQ-Exports）或相对路径</p>
+            <p>• macOS 路径使用正斜杠（/）</p>
             <p>• 修改路径后，新的导出文件将保存到新路径</p>
             <p>• 已导出的文件不会自动移动，需要手动迁移</p>
-            <p>• 留空则使用默认路径：%USERPROFILE%\.qq-chat-exporter\exports</p>
+            <p>• 留空则使用默认路径：~/.qq-chat-exporter/exports</p>
           </CardContent>
         </Card>
       </div>

@@ -6,15 +6,15 @@
   "main": "index.mjs",
   "type": "module",
   "icon": "icon.png",
-  "homepage": "https://github.com/shuakami/qq-chat-exporter",
+  "homepage": "https://github.com/sudo-yf/qq-chat-exporter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shuakami/qq-chat-exporter.git"
+    "url": "https://github.com/sudo-yf/qq-chat-exporter.git"
   },
   "napcat": {
     "tags": ["工具"],
     "minVersion": "4.14.0",
-    "homepage": "https://github.com/shuakami/qq-chat-exporter"
+    "homepage": "https://github.com/sudo-yf/qq-chat-exporter"
   },
   "scripts": {
     "gen:overlay": "node tools/gen-overlay.cjs && node tools/create-overlay-runtime.cjs",

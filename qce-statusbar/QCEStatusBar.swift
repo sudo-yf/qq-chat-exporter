@@ -51,11 +51,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
-        guard loadToken() else {
-            presentAlert(title: "找不到访问令牌", message: "请先检查 ~/.qq-chat-exporter/security.json")
-            NSApp.terminate(nil)
-            return
-        }
+        _ = loadToken()
 
         setupStatusItem()
         refreshState(startIfNeeded: true)
@@ -67,8 +63,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        handleExternalLaunchRequest()
+        return false
+    }
+
     func menuWillOpen(_ menu: NSMenu) {
         refreshState(startIfNeeded: false)
+    }
+
+    private func handleExternalLaunchRequest() {
+        _ = loadToken()
+        pendingBrowserOpen = true
+        refreshState(startIfNeeded: true)
     }
 
     private func setupStatusItem() {
@@ -110,11 +117,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func refreshState(startIfNeeded: Bool) {
+        _ = loadToken()
+
         fetchState { [weak self] state in
             guard let self else { return }
             DispatchQueue.main.async {
                 self.apply(state: state)
-                if startIfNeeded, self.lastState?.running != true, !self.startupAttempted {
+                if startIfNeeded, self.lastState?.running != true, self.launcherProcess?.isRunning != true {
                     self.startupAttempted = true
                     self.launchQCE(openBrowserWhenReady: true)
                 } else if state?.running == true {
@@ -129,7 +138,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let running = state?.running ?? false
         let online = state?.online ?? false
-        let nick = state?.nick.isEmpty == false ? state!.nick : "未登录"
+        let nick = state?.nick.isEmpty == false ? state!.nick : (token.isEmpty ? "等待访问令牌" : "未登录")
         let uin = state?.uin.isEmpty == false ? state!.uin : "——"
 
         stateItem.title = running
@@ -158,6 +167,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func fetchState(completion: @escaping (ServiceState?) -> Void) {
+        guard !token.isEmpty else {
+            completion(nil)
+            return
+        }
+
         var request = URLRequest(url: apiInfoURL)
         request.setValue(token, forHTTPHeaderField: "X-Access-Token")
 
@@ -173,10 +187,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 return
             }
 
-            let running = (napcat["online"] as? Bool) ?? false
+            let online = (napcat["online"] as? Bool) ?? false
             completion(ServiceState(
-                running: running,
-                online: running,
+                running: true,
+                online: online,
                 uin: selfInfo["uin"] as? String ?? "",
                 nick: selfInfo["nick"] as? String ?? ""
             ))
@@ -192,6 +206,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         task.executableURL = URL(fileURLWithPath: "/bin/bash")
         task.arguments = [foregroundScript.path]
         task.currentDirectoryURL = qceDir
+        var environment = ProcessInfo.processInfo.environment
+        environment["QCE_STATUSBAR_OWNER"] = "1"
+        task.environment = environment
 
         if !FileManager.default.fileExists(atPath: launcherLog.path) {
             FileManager.default.createFile(atPath: launcherLog.path, contents: nil)
@@ -209,6 +226,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     self?.launcherLogHandle?.closeFile()
                     self?.launcherLogHandle = nil
                     self?.launcherProcess = nil
+                    self?.startupAttempted = false
                     self?.refreshState(startIfNeeded: false)
                 }
             }
@@ -243,6 +261,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         task.currentDirectoryURL = qceDir
         task.terminationHandler = { _ in
             DispatchQueue.main.async {
+                self.startupAttempted = false
                 self.refreshState(startIfNeeded: false)
                 completion?()
             }

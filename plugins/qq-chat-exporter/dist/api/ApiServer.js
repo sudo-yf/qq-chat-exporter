@@ -449,7 +449,7 @@ export class QQChatExporterApiServer {
             const selfInfo = this.core.selfInfo;
             const avatarUrl = selfInfo?.avatarUrl || (selfInfo?.uin ? `https://q1.qlogo.cn/g?b=qq&nk=${selfInfo.uin}&s=640` : null);
             this.sendSuccessResponse(res, {
-                name: 'QQChatExporter V4 / https://github.com/shuakami/qq-chat-exporter',
+                name: 'QQChatExporter V4 / https://github.com/sudo-yf/qq-chat-exporter',
                 copyright: '本软件是免费的开源项目~ 如果您是买来的，请立即退款！如果有帮助到您，欢迎给我点个Star~',
                 version: '4.0.0',
                 napcat: {
@@ -2077,7 +2077,7 @@ export class QQChatExporterApiServer {
                 // 项目版权和基本信息
                 this.core.context.logger.log('[API] ══════════════════════════════════════════════════════════');
                 this.core.context.logger.log('[API]  QQChatExporter • v4.0.0');
-                this.core.context.logger.log('[API]  GitHub: https://github.com/shuakami/qq-chat-exporter');
+                this.core.context.logger.log('[API]  GitHub: https://github.com/sudo-yf/qq-chat-exporter');
                 this.core.context.logger.log('[API]  这是一个免费开源项目！如果您是买来的，请立即退款！');
                 this.core.context.logger.log('[API]  如果有帮助到您，欢迎给我点个Star~');
                 // 显示服务地址（参考NapCat的简洁方式）

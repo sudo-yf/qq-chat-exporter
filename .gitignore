@@ -43,6 +43,8 @@ exports/
 *.sqlite3
 
 NapCat-QCE-Windows-x64/
+NapCat-QCE-macOS-arm64/
+QCEStatusBar.app/
 NapCatQQ-clean/
 .ciallo/
 .kiro/

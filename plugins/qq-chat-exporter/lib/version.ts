@@ -38,7 +38,7 @@ export const APP_NAME = 'QQChatExporter';
 export const APP_FULL_NAME = `${APP_NAME} V${MAJOR_VERSION}`;
 
 /** GitHub 仓库地址 */
-export const GITHUB_URL = 'https://github.com/shuakami/qq-chat-exporter';
+export const GITHUB_URL = 'https://github.com/sudo-yf/qq-chat-exporter';
 
 /** 版权声明 */
 export const COPYRIGHT = '本软件是免费的开源项目~ 如果您是买来的，请立即退款！如果有帮助到您，欢迎给我点个Star~';

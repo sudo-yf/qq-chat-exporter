@@ -1,8 +1,8 @@
-site_name: QQ Chat Exporter
-site_url: https://shuakami.github.io/qq-chat-exporter/
-site_description: QQ 聊天记录导出工具
-repo_url: https://github.com/shuakami/qq-chat-exporter
-repo_name: shuakami/qq-chat-exporter
+site_name: QQ Chat Exporter（macOS）
+site_url: https://sudo-yf.github.io/qq-chat-exporter/
+site_description: QQ 聊天记录导出工具（macOS 版）
+repo_url: https://github.com/sudo-yf/qq-chat-exporter
+repo_name: sudo-yf/qq-chat-exporter
 docs_dir: docs
 
 theme:
@@ -46,7 +46,5 @@ markdown_extensions:
 nav:
   - 首页: index.md
   - 使用手册: guide.md
-  - Linux 部署: linux-deploy.md
-  - Docker NapCat 部署: docker-napcat-deployment.md
   - 如何反馈问题: feedback.md
   - 如何贡献: contributing.md

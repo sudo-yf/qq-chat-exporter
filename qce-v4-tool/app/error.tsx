@@ -69,7 +69,7 @@ ${errorData.stack || '无'}
 `)
     
     window.open(
-      `https://github.com/shuakami/qq-chat-exporter/issues/new?title=${title}&body=${body}&labels=bug`,
+      `https://github.com/sudo-yf/qq-chat-exporter/issues/new?title=${title}&body=${body}&labels=bug`,
       '_blank'
     )
   }

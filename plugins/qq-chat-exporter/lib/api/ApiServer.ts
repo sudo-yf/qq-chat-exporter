@@ -783,7 +783,7 @@ export class QQChatExporterApiServer {
             ${messagesHtml}
         </div>
         <div class="footer">
-            QQ Chat Exporter · github.com/shuakami/qq-chat-exporter
+            QQ Chat Exporter · github.com/sudo-yf/qq-chat-exporter
         </div>
     </div>
 </body>

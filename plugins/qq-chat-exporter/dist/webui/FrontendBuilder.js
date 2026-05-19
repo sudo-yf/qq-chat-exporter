@@ -396,7 +396,7 @@ export class FrontendBuilder {
         </form>
         
         <div class="footer">
-            <a href="https://github.com/shuakami/qq-chat-exporter">开源项目</a> • 免费软件
+            <a href="https://github.com/sudo-yf/qq-chat-exporter">开源项目</a> • 免费软件
         </div>
     </div>
 
