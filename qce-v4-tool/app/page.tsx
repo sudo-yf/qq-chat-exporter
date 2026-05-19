@@ -1158,7 +1158,7 @@ export default function QCEDashboard() {
   const onboardingSecondaryButtonClass = "w-full rounded-full px-4 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
 
   return (
-    <div className="flex h-screen w-full bg-background font-sans antialiased overflow-hidden">
+    <div className="flex h-screen w-full macos-desktop p-0 font-sans antialiased overflow-hidden sm:gap-2 sm:p-2">
       {/* Mobile sidebar overlay */}
       <AnimatePresence>
         {sidebarMobileOpen && (
@@ -1182,7 +1182,7 @@ export default function QCEDashboard() {
             exit={{ width: 0, opacity: 0, x: reduceMotion ? 0 : -24, scaleX: 0.98, filter: "blur(12px)" }}
             transition={sidebarTransition}
             className={`h-full flex flex-col flex-shrink-0 overflow-hidden select-none ${
-              sidebarMobileOpen ? 'fixed left-0 top-0 z-50 bg-background/95 shadow-[0_24px_80px_rgba(15,23,42,0.22)] backdrop-blur-2xl' : 'relative'
+              sidebarMobileOpen ? 'fixed left-0 top-0 z-50 rounded-r-[24px] border-r macos-window' : 'relative border-r macos-sidebar sm:rounded-[22px]'
             }`}
           >
             <motion.div
@@ -1193,7 +1193,13 @@ export default function QCEDashboard() {
               className="w-[240px] h-full flex flex-col"
             >
               {/* Sidebar header */}
-              <div className="flex items-center px-4 h-14 flex-shrink-0">
+              <div className="flex items-center justify-between gap-3 px-4 h-14 flex-shrink-0 border-b border-black/[0.045] dark:border-white/[0.055]">
+                <div className="hidden md:flex items-center gap-2" aria-hidden="true">
+                  <span className="macos-traffic-dot bg-[#ff5f57]" />
+                  <span className="macos-traffic-dot bg-[#febc2e]" />
+                  <span className="macos-traffic-dot bg-[#28c840]" />
+                </div>
+                <div className="min-w-0 flex-1 flex justify-end">
                 {systemInfo?.napcat.selfInfo ? (
                   <div className="flex items-center gap-2.5 min-w-0">
                     <Avatar className="w-7 h-7 flex-shrink-0 rounded-full">
@@ -1208,6 +1214,7 @@ export default function QCEDashboard() {
                     <div className="w-20 h-3.5 bg-black/[0.04] dark:bg-white/[0.06] rounded animate-pulse" />
                   </div>
                 )}
+                </div>
               </div>
 
               {/* Main nav */}
@@ -1227,11 +1234,11 @@ export default function QCEDashboard() {
                         variants={STAG.item}
                         id={`nav-${item.id}`}
                         onClick={() => setActiveTab(item.id)}
-                        className={`w-full flex items-center gap-2.5 px-2 py-[6px] text-[13px] font-medium rounded-md transition-colors ${
+                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl transition-all ${
                           isActive 
-                            ? "text-foreground bg-black/[0.05] dark:bg-white/[0.05]" 
-                            : "text-muted-foreground hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.04]"
-                        } ${highlightedNav === item.id ? "ring-2 ring-black/10 dark:ring-white/14 ring-offset-2 ring-offset-background" : ""}`}
+                            ? "text-foreground bg-white/[0.62] shadow-[0_1px_2px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.65)] dark:bg-white/[0.075]"
+                            : "text-muted-foreground hover:text-foreground hover:bg-white/[0.45] dark:hover:bg-white/[0.055]"
+                        } ${highlightedNav === item.id ? "ring-2 ring-primary/25 ring-offset-2 ring-offset-background" : ""}`}
                       >
                         <Icon className="w-4 h-4 flex-shrink-0" />
                         <span className="truncate">{item.label}</span>
@@ -1258,10 +1265,10 @@ export default function QCEDashboard() {
                         variants={STAG.item}
                         id={`nav-${item.id}`}
                         onClick={() => setActiveTab(item.id)}
-                        className={`w-full flex items-center gap-2.5 px-2 py-[6px] text-[13px] font-medium rounded-md transition-colors ${
+                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl transition-all ${
                           isActive 
-                            ? "text-foreground bg-black/[0.05] dark:bg-white/[0.05]" 
-                            : "text-muted-foreground hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.04]"
+                            ? "text-foreground bg-white/[0.62] shadow-[0_1px_2px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.65)] dark:bg-white/[0.075]"
+                            : "text-muted-foreground hover:text-foreground hover:bg-white/[0.45] dark:hover:bg-white/[0.055]"
                         }`}
                       >
                         <Icon className="w-4 h-4 flex-shrink-0" />
@@ -1306,9 +1313,9 @@ export default function QCEDashboard() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden sm:m-2 sm:rounded-xl sm:border sm:border-black/[0.05] sm:shadow-[0_2px_8px_rgba(0,0,0,0.015)] bg-card dark:border-white/[0.06]">
+      <div className="flex-1 flex flex-col overflow-hidden bg-card sm:rounded-[22px] sm:border macos-window">
         {/* Page header bar */}
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-black/[0.06] dark:border-white/[0.06] px-4 h-12">
+        <div className="flex flex-shrink-0 items-center justify-between px-4 h-12 macos-topbar">
           <div className="flex items-center gap-2 text-[14px]">
             <button
               onClick={() => {
@@ -1318,7 +1325,7 @@ export default function QCEDashboard() {
                   setSidebarOpen(!sidebarOpen)
                 }
               }}
-              className="p-1 -ml-1 rounded-md text-muted-foreground/60 hover:text-muted-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-colors"
+              className="p-1 -ml-1 rounded-lg text-muted-foreground/60 hover:text-muted-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
             >
               {sidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeftOpen className="w-4 h-4" />}
             </button>
@@ -1509,7 +1516,7 @@ export default function QCEDashboard() {
         </div>
 
         {/* Content area */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto bg-white/[0.16] dark:bg-black/[0.08]">
           <>
             {/* ==================== OVERVIEW ==================== */}
             {activeTab === "overview" && (

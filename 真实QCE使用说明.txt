@@ -1,0 +1,20 @@
+真实 QCE 使用说明
+
+1. 双击：打开真实QQ导出器.command
+   - 会启动右上角菜单栏小图标。
+   - 点击图标即可看到“打开网页 / 启动QCE / 停止QCE / 停止并退出”。
+   - 正常情况下不需要保留 Terminal 窗口。
+
+2. 登录地址：
+   打开菜单栏图标后点“打开网页”，会自动带上本机访问令牌。
+
+3. Access Token：
+   存在于 ~/.qq-chat-exporter/security.json
+
+4. 关闭服务：
+   - 点右上角 QCE 图标 → “停止并退出”
+   - 或双击：关闭真实QQ导出器.command
+
+5. 正常状态应该显示：
+   eleven / QQ 2645084731 / 已连接 / QQ在线
+   不应该显示：TestSelf、QQ 10000、404 Page not found。

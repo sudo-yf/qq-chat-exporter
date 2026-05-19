@@ -12,7 +12,7 @@
  * 就能调出对应聊天，并把它当成一条普通会话直接送进任务向导导出。
  */
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
@@ -48,6 +48,10 @@ export function QqLookupCard({ initialUin = "", onStartExport, onPreview }: QqLo
     const [result, setResult] = useState<UserLookupResult | null>(null)
     const [error, setError] = useState<string | null>(null)
 
+    useEffect(() => {
+        setUin(initialUin)
+    }, [initialUin])
+
     const submit = useCallback(async () => {
         const trimmed = uin.trim()
         if (!UIN_REGEX.test(trimmed)) {
@@ -76,7 +80,7 @@ export function QqLookupCard({ initialUin = "", onStartExport, onPreview }: QqLo
     }
 
     return (
-        <div className="mt-6 mx-auto max-w-md text-left rounded-xl border border-black/[0.06] dark:border-white/[0.06] bg-card p-4 space-y-3">
+        <div className="mt-6 mx-auto max-w-md text-left rounded-[20px] macos-surface p-4 space-y-3">
             <div>
                 <p className="text-sm font-medium text-foreground">按 QQ 号反查会话</p>
                 <p className="text-xs text-muted-foreground/70 mt-1">
@@ -92,13 +96,13 @@ export function QqLookupCard({ initialUin = "", onStartExport, onPreview }: QqLo
                     value={uin}
                     onChange={(e) => setUin(e.target.value)}
                     onKeyDown={onKeyDown}
-                    className="flex-1 h-9 text-sm rounded-lg"
+                    className="flex-1 h-9 text-sm rounded-xl macos-control"
                 />
                 <Button
                     onClick={submit}
                     disabled={loading || !uin.trim()}
                     size="sm"
-                    className="h-9 px-3 rounded-lg"
+                    className="h-9 px-3 rounded-xl"
                 >
                     {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
                     <span className="ml-1.5">{loading ? "查询中" : "查询"}</span>
@@ -120,7 +124,7 @@ export function QqLookupCard({ initialUin = "", onStartExport, onPreview }: QqLo
             )}
 
             {result && result.found && result.uid && (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-black/[0.02] dark:bg-white/[0.03]">
+                <div className="flex items-center gap-3 rounded-2xl border border-black/[0.055] bg-white/[0.48] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.58)] dark:border-white/[0.065] dark:bg-white/[0.035]">
                     <Avatar className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <AvatarImage src={result.avatarUrl} alt={result.nick || result.uin} />
                         <AvatarFallback className="rounded-full text-xs">
@@ -149,7 +153,7 @@ export function QqLookupCard({ initialUin = "", onStartExport, onPreview }: QqLo
                             <Button
                                 size="sm"
                                 variant="ghost"
-                                className="h-8 px-2.5 text-xs rounded-full"
+                                    className="h-8 px-2.5 text-xs rounded-full"
                                 onClick={() =>
                                     onPreview(
                                         { chatType: 1, peerUid: result.uid! },

@@ -18,14 +18,14 @@ const DialogOverlay = React.forwardRef<
     ref={ref}
     className={cn(
       "fixed inset-0 z-[100]",
-      "bg-black/25 dark:bg-black/50",
+      "bg-black/20 dark:bg-black/48",
       "data-[state=open]:animate-in data-[state=closed]:animate-out",
       "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     style={{
-      backdropFilter: 'blur(4px)',
-      WebkitBackdropFilter: 'blur(4px)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
     }}
     {...props}
   />
@@ -56,8 +56,8 @@ export const DialogContent = React.forwardRef<
               "fixed left-1/2 top-1/2 z-[101]",
               "-translate-x-1/2 -translate-y-1/2",
               "w-full max-w-lg",
-              "bg-card dark:bg-card",
-              "rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]",
+              "macos-window",
+              "rounded-[22px]",
               "border border-black/[0.06] dark:border-white/[0.06]",
             ],
         "data-[state=open]:animate-in data-[state=closed]:animate-out",

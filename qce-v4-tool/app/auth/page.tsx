@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, X, Eye, EyeOff, Lock, ExternalLink, CheckCircle2 } from 'lucide-react'
 import AuthManager from '@/lib/auth'
+import { getAppRootPath } from '@/lib/app-path'
 
 export default function AuthPage() {
   const [token, setToken] = useState('')
@@ -58,7 +59,7 @@ export default function AuthPage() {
 
     const authManager = AuthManager.getInstance()
     if (authManager.isAuthenticated()) {
-      window.location.href = '/qce-v4-tool'
+      window.location.replace(getAppRootPath())
       return
     }
 
@@ -72,7 +73,7 @@ export default function AuthPage() {
       setTimeout(async () => {
         const ok = await verifyAndStoreToken(urlToken!)
         if (ok) {
-          window.location.href = '/qce-v4-tool'
+          window.location.replace(getAppRootPath())
         } else {
           // URL token 失效（比如换了 security.json）就退回手动表单。
           setAutoFromUrl(false)
@@ -97,7 +98,7 @@ export default function AuthPage() {
 
     const ok = await verifyAndStoreToken(token.trim())
     if (ok) {
-      window.location.href = '/qce-v4-tool'
+      window.location.replace(getAppRootPath())
       return
     }
     setLoading(false)

@@ -4,13 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.968 0 0);
+  --background: oklch(0.965 0.004 255);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.56 0.18 257);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -20,16 +20,16 @@
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0 0);
   --destructive-foreground: oklch(0.577 0 0);
-  --border: oklch(0.91 0 0);
-  --input: oklch(0.91 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.89 0.005 255);
+  --input: oklch(0.89 0.005 255);
+  --ring: oklch(0.62 0.17 257);
   --chart-1: oklch(0.646 0 0);
   --chart-2: oklch(0.6 0 0);
   --chart-3: oklch(0.398 0 0);
   --chart-4: oklch(0.828 0 0);
   --chart-5: oklch(0.769 0 0);
   --radius: 0.625rem;
-  --sidebar: oklch(0.968 0 0);
+  --sidebar: oklch(0.95 0.004 255);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -40,14 +40,14 @@
 }
 
 .dark {
-  --background: oklch(0.13 0 0);
+  --background: oklch(0.145 0.004 255);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.16 0 0);
+  --card: oklch(0.18 0.004 255);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.16 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.68 0.16 257);
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.22 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.22 0 0);
@@ -56,9 +56,9 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0 0);
   --destructive-foreground: oklch(0.637 0 0);
-  --border: oklch(0.22 0 0);
-  --input: oklch(0.22 0 0);
-  --ring: oklch(0.439 0 0);
+  --border: oklch(0.27 0.004 255);
+  --input: oklch(0.27 0.004 255);
+  --ring: oklch(0.66 0.14 257);
   --chart-1: oklch(0.488 0 0);
   --chart-2: oklch(0.696 0 0);
   --chart-3: oklch(0.769 0 0);
@@ -119,15 +119,154 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    background: var(--background);
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+    background:
+      radial-gradient(circle at 14% 12%, oklch(0.86 0.045 253 / 0.55), transparent 26rem),
+      radial-gradient(circle at 90% 4%, oklch(0.88 0.035 305 / 0.42), transparent 25rem),
+      linear-gradient(135deg, oklch(0.985 0.002 255), oklch(0.935 0.006 255));
+  }
+
+  .dark body {
+    background:
+      radial-gradient(circle at 14% 10%, oklch(0.38 0.07 253 / 0.24), transparent 28rem),
+      radial-gradient(circle at 86% 0%, oklch(0.32 0.06 305 / 0.18), transparent 26rem),
+      linear-gradient(135deg, oklch(0.16 0.006 255), oklch(0.105 0.004 255));
+  }
+
+  ::selection {
+    background: oklch(0.72 0.15 257 / 0.28);
+    color: var(--foreground);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 }
 
-/* Scrollbar styling for Linear-like feel */
+@layer components {
+  .macos-desktop {
+    background:
+      radial-gradient(circle at 12% 10%, oklch(0.86 0.05 254 / 0.52), transparent 28rem),
+      radial-gradient(circle at 92% 8%, oklch(0.89 0.035 304 / 0.42), transparent 26rem),
+      linear-gradient(135deg, oklch(0.982 0.002 255), oklch(0.936 0.006 255)) !important;
+  }
+
+  .dark .macos-desktop {
+    background:
+      radial-gradient(circle at 10% 8%, oklch(0.36 0.07 254 / 0.28), transparent 30rem),
+      radial-gradient(circle at 88% 6%, oklch(0.32 0.065 304 / 0.2), transparent 28rem),
+      linear-gradient(135deg, oklch(0.165 0.006 255), oklch(0.105 0.004 255)) !important;
+  }
+
+  .macos-window {
+    background: color-mix(in oklch, var(--card) 84%, transparent) !important;
+    border-color: oklch(0.19 0.006 255 / 0.08);
+    box-shadow:
+      0 28px 90px oklch(0.23 0.02 255 / 0.14),
+      0 8px 26px oklch(0.23 0.02 255 / 0.08),
+      inset 0 1px 0 oklch(1 0 0 / 0.68);
+    backdrop-filter: blur(28px) saturate(1.35);
+    -webkit-backdrop-filter: blur(28px) saturate(1.35);
+  }
+
+  .dark .macos-window {
+    background: color-mix(in oklch, var(--card) 78%, transparent) !important;
+    border-color: oklch(1 0 0 / 0.08);
+    box-shadow:
+      0 30px 90px oklch(0 0 0 / 0.48),
+      0 10px 32px oklch(0 0 0 / 0.38),
+      inset 0 1px 0 oklch(1 0 0 / 0.08);
+  }
+
+  .macos-sidebar {
+    background: oklch(0.975 0.003 255 / 0.58) !important;
+    border-color: oklch(0.19 0.006 255 / 0.07);
+    box-shadow: inset -1px 0 0 oklch(1 0 0 / 0.45);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  }
+
+  .dark .macos-sidebar {
+    background: oklch(0.17 0.005 255 / 0.68) !important;
+    border-color: oklch(1 0 0 / 0.07);
+    box-shadow: inset -1px 0 0 oklch(1 0 0 / 0.05);
+  }
+
+  .macos-topbar {
+    background: oklch(1 0 0 / 0.48) !important;
+    box-shadow: inset 0 -1px 0 oklch(0.19 0.006 255 / 0.06);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  }
+
+  .dark .macos-topbar {
+    background: oklch(0.17 0.004 255 / 0.54) !important;
+    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.07);
+  }
+
+  .macos-surface {
+    background: color-mix(in oklch, var(--card) 72%, transparent) !important;
+    border: 1px solid oklch(0.19 0.006 255 / 0.07);
+    box-shadow:
+      0 14px 42px oklch(0.23 0.02 255 / 0.06),
+      inset 0 1px 0 oklch(1 0 0 / 0.58);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  }
+
+  .dark .macos-surface {
+    background: color-mix(in oklch, var(--card) 66%, transparent) !important;
+    border-color: oklch(1 0 0 / 0.075);
+    box-shadow:
+      0 16px 48px oklch(0 0 0 / 0.22),
+      inset 0 1px 0 oklch(1 0 0 / 0.06);
+  }
+
+  .macos-control {
+    background: oklch(0.985 0.002 255 / 0.66) !important;
+    border-color: oklch(0.2 0.006 255 / 0.08);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.55), 0 1px 2px oklch(0.22 0.02 255 / 0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .dark .macos-control {
+    background: oklch(0.22 0.004 255 / 0.58) !important;
+    border-color: oklch(1 0 0 / 0.08);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05);
+  }
+
+  .macos-traffic-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
+  }
+}
+
+/* Scrollbar styling for a native macOS-like feel */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -135,20 +274,28 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.8 0 0);
-  border-radius: 3px;
+  background: oklch(0.58 0.006 255 / 0.28);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.7 0 0);
+  background: oklch(0.5 0.006 255 / 0.42);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.3 0 0);
+  background: oklch(0.8 0.004 255 / 0.2);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.4 0 0);
+  background: oklch(0.85 0.004 255 / 0.32);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 @keyframes shimmer {

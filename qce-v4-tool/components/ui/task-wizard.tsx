@@ -137,20 +137,61 @@ export function TaskWizard({
   }, [prefilledData, isOpen])
 
   useEffect(() => {
-    if (prefilledData?.peerUid && isOpen) {
-      const targetList = prefilledData.chatType === 2 ? groups : friends
-      const found = targetList.find((t) => {
-        if (prefilledData.chatType === 2) return "groupCode" in t && t.groupCode === prefilledData.peerUid
-        return "uid" in t && t.uid === prefilledData.peerUid
-      })
-      if (found) {
-        setSelectedTarget(found)
-        setShowTargetSelector(false)
-      }
-    } else if (isOpen && !prefilledData?.peerUid) {
+    if (!prefilledData || !isOpen) {
+      return
+    }
+
+    if (!prefilledData.peerUid) {
       setSelectedTarget(null)
       setShowTargetSelector(true)
+      return
     }
+
+    const targetList = prefilledData.chatType === 2 ? groups : friends
+    const found = targetList.find((t) => {
+      if (prefilledData.chatType === 2) return "groupCode" in t && t.groupCode === prefilledData.peerUid
+      return "uid" in t && t.uid === prefilledData.peerUid
+    })
+
+    if (found) {
+      setSelectedTarget(found)
+      setShowTargetSelector(false)
+      return
+    }
+
+    if (prefilledData.chatType === 2) {
+      setSelectedTarget({
+        groupCode: prefilledData.peerUid,
+        groupName: prefilledData.sessionName || `群 ${prefilledData.peerUid}`,
+        memberCount: 0,
+        maxMember: 0,
+        remark: prefilledData.sessionName || undefined,
+        avatarUrl: undefined,
+      })
+      setShowTargetSelector(false)
+      return
+    }
+
+    if (prefilledData.chatType === 1) {
+      const numericUin = Number(prefilledData.peerUid)
+      if (Number.isFinite(numericUin)) {
+        setSelectedTarget({
+          uid: prefilledData.peerUid,
+          uin: numericUin,
+          nick: prefilledData.sessionName || `好友 ${prefilledData.peerUid}`,
+          remark: prefilledData.sessionName || undefined,
+          avatarUrl: `https://q1.qlogo.cn/g?b=qq&nk=${prefilledData.peerUid}&s=640`,
+          isOnline: false,
+          status: 0,
+          categoryId: 1,
+        })
+        setShowTargetSelector(false)
+        return
+      }
+    }
+
+    setSelectedTarget(null)
+    setShowTargetSelector(true)
   }, [prefilledData, groups, friends, isOpen])
 
   // auto load chat list
@@ -161,7 +202,7 @@ export function TaskWizard({
   // init search data
   const groupSearchRef = useRef(groupSearch)
   const friendSearchRef = useRef(friendSearch)
-  const searchTimerRef = useRef<NodeJS.Timeout>()
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const currentChatTypeRef = useRef(form.chatType)
 
   useEffect(() => {
@@ -344,9 +385,8 @@ export function TaskWizard({
                 const uin = member.uin || member.uid
                 const isSelected = selectedMemberUins.has(uin)
                 const displayName = member.cardName || member.nick
-                const roleNum = typeof member.role === 'number' ? member.role : 0
-                const isOwner = roleNum === 4 || member.role === 'owner'
-                const isAdmin = roleNum === 3 || member.role === 'admin'
+                const isOwner = member.role === 'owner'
+                const isAdmin = member.role === 'admin'
                 return (
                   <div
                     key={uin}
@@ -402,7 +442,11 @@ export function TaskWizard({
     }, 300)
   }, [])
 
-  useEffect(() => () => searchTimerRef.current && clearTimeout(searchTimerRef.current), [])
+  useEffect(() => {
+    return () => {
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current)
+    }
+  }, [])
 
   const getDisplayTargets = () => {
     const s = form.chatType === 2 ? groupSearch : friendSearch
@@ -469,9 +513,9 @@ export function TaskWizard({
     // 创建一个虚拟的 Friend 对象用于显示
     const virtualFriend: Friend = {
       uid: qqNumber,
-      uin: qqNumber,
+      uin: Number(qqNumber),
       nick: manualSessionName.trim() || `好友 ${qqNumber}`,
-      remark: manualSessionName.trim() || null,
+      remark: manualSessionName.trim() || undefined,
       avatarUrl: `https://q1.qlogo.cn/g?b=qq&nk=${qqNumber}&s=640`,
       isOnline: false,
       status: 0,
@@ -541,7 +585,7 @@ export function TaskWizard({
 
         {/* 手动输入QQ号面板（Issue #226） */}
         {manualInputMode ? (
-          <div className="space-y-3 p-4 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl bg-muted/50">
+          <div className="space-y-3 rounded-[20px] macos-surface p-4">
             <div className="space-y-2">
               <Label htmlFor="manualQQ" className="text-sm">QQ号码</Label>
               <Input
@@ -549,7 +593,7 @@ export function TaskWizard({
                 placeholder="输入要导出的QQ号"
                 value={manualQQNumber}
                 onChange={(e) => setManualQQNumber(e.target.value.replace(/\D/g, ''))}
-                className="rounded-xl font-mono"
+                className="rounded-xl font-mono macos-control"
               />
             </div>
             <div className="space-y-2">
@@ -559,7 +603,7 @@ export function TaskWizard({
                 placeholder="给这个聊天起个名字"
                 value={manualSessionName}
                 onChange={(e) => setManualSessionName(e.target.value)}
-                className="rounded-xl"
+                className="rounded-xl macos-control"
               />
             </div>
             <Button
@@ -602,7 +646,7 @@ export function TaskWizard({
               placeholder={form.chatType === 1 ? "搜索好友昵称、备注..." : "搜索群组名称、群号..."}
               value={searchTerm}
               onChange={(e) => handleSearchInput(e.target.value)}
-              className="pl-10 rounded-full"
+              className="pl-10 rounded-full macos-control"
             />
           </div>
         </div>
@@ -610,7 +654,7 @@ export function TaskWizard({
         {/* 列表 */}
         <div
           ref={listRef}
-          className="max-h-96 overflow-y-auto space-y-1 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-2 bg-card/70"
+          className="max-h-96 overflow-y-auto space-y-1 rounded-[20px] macos-surface p-2"
           onScroll={handleScroll}
         >
           {s.loading && displayTargets.length === 0 && (
@@ -663,7 +707,7 @@ export function TaskWizard({
                 className={[
                   "flex items-center gap-2 p-2 rounded-xl cursor-pointer transition",
                   "border border-transparent",
-                  isSelected ? "ring-1 ring-foreground/20 bg-muted border-black/[0.06] dark:border-white/[0.06]" : "hover:bg-muted"
+                  isSelected ? "ring-1 ring-primary/25 bg-white/[0.62] border-black/[0.06] dark:bg-white/[0.075] dark:border-white/[0.06]" : "hover:bg-white/[0.5] dark:hover:bg-white/[0.045]"
                 ].join(" ")}
                 onClick={() => handleSelectTarget(target)}
               >
@@ -753,7 +797,7 @@ export function TaskWizard({
     return (
       <div className="space-y-6">
         {selectedTarget && (
-          <div className="p-4 rounded-2xl border border-black/[0.06] dark:border-white/[0.06] bg-card/70">
+          <div className="rounded-[20px] macos-surface p-4">
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-500 mt-0.5" />
               <div className="flex-1">
@@ -830,7 +874,7 @@ export function TaskWizard({
             placeholder="为这个导出任务起个名字"
             value={form.sessionName}
             onChange={(e) => setForm((p) => ({ ...p, sessionName: e.target.value }))}
-            className="rounded-xl"
+            className="rounded-xl macos-control"
           />
         </div>
 
@@ -861,8 +905,8 @@ export function TaskWizard({
                 <div
                   key={fmt}
                   className={[
-                    "relative cursor-pointer rounded-2xl border-2 p-4 transition-all",
-                    active ? "border-blue-500 dark:border-blue-600 bg-blue-50/50 dark:bg-blue-950/30 shadow-sm" : "border-black/[0.06] dark:border-white/[0.06] hover:border-black/[0.12] dark:hover:border-white/[0.12]"
+                    "relative cursor-pointer rounded-[20px] border p-4 transition-all",
+                    active ? "border-primary/35 bg-primary/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:bg-primary/15" : "border-black/[0.06] bg-white/[0.38] hover:border-black/[0.12] hover:bg-white/[0.58] dark:border-white/[0.06] dark:bg-white/[0.025] dark:hover:border-white/[0.12] dark:hover:bg-white/[0.05]"
                   ].join(" ")}
                   onClick={() => setForm((p) => ({ ...p, format: fmt }))}
                 >
@@ -901,7 +945,7 @@ export function TaskWizard({
                 placeholder="年/月/日 --:--"
                 value={form.startTime}
                 onChange={(e) => setForm((p) => ({ ...p, startTime: e.target.value }))}
-                className="font-mono rounded-xl"
+                className="font-mono rounded-xl macos-control"
               />
             </div>
             <div className="space-y-2">
@@ -912,7 +956,7 @@ export function TaskWizard({
                 placeholder="年/月/日 --:--"
                 value={form.endTime}
                 onChange={(e) => setForm((p) => ({ ...p, endTime: e.target.value }))}
-                className="font-mono rounded-xl"
+                className="font-mono rounded-xl macos-control"
               />
             </div>
           </div>
@@ -927,7 +971,7 @@ export function TaskWizard({
             value={form.keywords}
             onChange={(e) => setForm((p) => ({ ...p, keywords: e.target.value }))}
             rows={3}
-            className="rounded-2xl"
+            className="rounded-2xl macos-control"
           />
         </div>
 
@@ -958,7 +1002,7 @@ export function TaskWizard({
             value={form.excludeUserUins || ""}
             onChange={(e) => setForm((p) => ({ ...p, excludeUserUins: e.target.value }))}
             rows={2}
-            className="rounded-2xl"
+            className="rounded-2xl macos-control"
           />
           {form.excludeUserUins && (
             <p className="text-xs text-muted-foreground">
@@ -994,7 +1038,7 @@ export function TaskWizard({
             value={form.includeUserUins || ""}
             onChange={(e) => setForm((p) => ({ ...p, includeUserUins: e.target.value }))}
             rows={2}
-            className="rounded-2xl"
+            className="rounded-2xl macos-control"
           />
           {form.includeUserUins && (
             <p className="text-xs text-muted-foreground">
@@ -1018,7 +1062,7 @@ export function TaskWizard({
               placeholder="留空使用默认路径，或输入自定义路径如 D:\exports"
               value={form.outputDir || ""}
               onChange={(e) => setForm((p) => ({ ...p, outputDir: e.target.value }))}
-              className="rounded-xl font-mono text-sm"
+              className="rounded-xl font-mono text-sm macos-control"
             />
             <p className="text-xs text-muted-foreground">
               默认保存到用户目录下的 .qq-chat-exporter/exports 文件夹
@@ -1165,14 +1209,14 @@ export function TaskWizard({
               <div
                 key={opt.id}
                 className={[
-                  "relative cursor-pointer rounded-2xl border p-4 transition-all",
+                  "relative cursor-pointer rounded-[20px] border p-4 transition-all",
                   (opt as any).highlight && opt.checked 
                     ? "border-blue-400 dark:border-blue-600 bg-blue-50/50 dark:bg-blue-950/30 ring-1 ring-blue-200 dark:ring-blue-800" 
                     : (opt as any).highlight 
-                      ? "border-black/[0.08] dark:border-white/[0.08] bg-muted/30 hover:border-blue-300 dark:hover:border-blue-700"
+                      ? "border-black/[0.08] dark:border-white/[0.08] bg-white/[0.38] hover:border-blue-300 dark:bg-white/[0.025] dark:hover:border-blue-700"
                       : opt.checked 
-                        ? "border-foreground/20 bg-muted" 
-                        : "border-black/[0.06] dark:border-white/[0.06] hover:border-black/[0.12] dark:hover:border-white/[0.12]"
+                        ? "border-primary/25 bg-primary/10"
+                        : "border-black/[0.06] bg-white/[0.34] hover:border-black/[0.12] hover:bg-white/[0.54] dark:border-white/[0.06] dark:bg-white/[0.025] dark:hover:border-white/[0.12] dark:hover:bg-white/[0.05]"
                 ].join(" ")}
                 onClick={() => opt.set(!opt.checked)}
               >
@@ -1210,18 +1254,18 @@ export function TaskWizard({
       <DialogContent
         fullScreen
         overlayClassName="bg-background/60 backdrop-blur-xl"
-        className="flex flex-col h-full p-0"
+        className="flex flex-col h-full p-0 macos-desktop"
       >
-        <DialogHeader>
+        <DialogHeader className="macos-topbar">
           <DialogTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
             创建导出任务
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 flex gap-8 min-h-0 px-6 py-6">
+        <div className="flex-1 flex gap-4 min-h-0 px-4 py-4 sm:px-6 sm:py-6">
           {/* 左侧 */}
-          <div className="w-2/5 flex flex-col">
+          <div className="w-2/5 min-h-0 flex flex-col rounded-[24px] macos-surface p-4">
             <div className="mb-4">
               <h3 className="text-base font-medium mb-1">选择导出目标</h3>
               <p className="text-sm text-muted-foreground">选择要导出聊天记录的群组或好友</p>
@@ -1244,10 +1288,10 @@ export function TaskWizard({
             </div>
           </div>
 
-          <Separator orientation="vertical" className="h-full" />
+          <Separator orientation="vertical" className="h-full bg-transparent" />
 
           {/* 右侧 */}
-          <div className="w-3/5 flex flex-col">
+          <div className="w-3/5 min-h-0 flex flex-col rounded-[24px] macos-surface p-4">
             <div className="mb-4">
               <h3 className="text-base font-medium mb-1">配置导出选项</h3>
               <p className="text-sm text-muted-foreground">设置导出格式、时间范围和过滤条件</p>
@@ -1264,7 +1308,7 @@ export function TaskWizard({
         </div>
 
         {/* 底部 */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-black/[0.06] dark:border-white/[0.06]">
+        <div className="flex items-center justify-between px-6 py-4 macos-topbar">
           <div className="text-sm text-muted-foreground">
             {canSubmit() ? <span className="text-foreground">准备就绪</span> : <span>请完成所有必填项</span>}
           </div>

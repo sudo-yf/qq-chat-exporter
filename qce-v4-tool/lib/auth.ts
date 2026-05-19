@@ -2,6 +2,8 @@
  * 认证工具库
  */
 
+import { getAuthPath } from '@/lib/app-path';
+
 const TOKEN_KEY = 'qce_access_token';
 
 export class AuthManager {
@@ -109,7 +111,7 @@ export class AuthManager {
         // 外部请求（例如 GitHub Star 数）失败不应该影响登录态。
         if (isApiRequest && (response.status === 401 || response.status === 403)) {
           this.clearToken();
-          window.location.href = '/qce-v4-tool/auth';
+          window.location.replace(getAuthPath());
           return response;
         }
         

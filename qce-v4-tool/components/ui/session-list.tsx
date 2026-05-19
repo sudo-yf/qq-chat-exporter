@@ -41,6 +41,7 @@ import {
   formatRelativeFromNow,
 } from "@/lib/session-sort"
 import { QqLookupCard } from "./qq-lookup-card"
+import { GroupLookupCard } from "./group-lookup-card"
 
 const UIN_PATTERN = /^\d{4,12}$/
 
@@ -429,7 +430,7 @@ export function SessionList({
   }, [batchMode, selectedItems, avatarExportLoading, onToggleItem, onPreviewChat, onOpenTaskWizard, onExportGroupAvatars, onOpenEssenceModal, onOpenGroupFilesModal])
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4 rounded-[22px] macos-surface p-4">
       {/* Search and Filter Bar */}
       <div className="flex flex-col sm:flex-row gap-2">
         {/* Search Input */}
@@ -440,7 +441,7 @@ export function SessionList({
             placeholder="搜索会话名称、备注或 ID... (按 / 聚焦)"
             value={search}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            className="pl-8 pr-8 h-10 text-sm rounded-lg border-black/[0.06] dark:border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.03]"
+            className="pl-8 pr-8 h-10 text-sm rounded-xl macos-control"
           />
           {search && (
             <button
@@ -456,7 +457,7 @@ export function SessionList({
         <div className="flex items-center gap-1.5">
           {/* Type Filter */}
           <Select value={type} onValueChange={(v: string) => setType(v as SessionType)}>
-            <SelectTrigger className="w-[120px] h-10 text-sm rounded-lg">
+              <SelectTrigger className="w-[120px] h-10 text-sm rounded-xl macos-control">
               <SelectValue placeholder="全部类型" />
             </SelectTrigger>
             <SelectContent>
@@ -468,7 +469,7 @@ export function SessionList({
 
           {/* Sort Field */}
           <Select value={sortField} onValueChange={(v: string) => setSortField(v as SortField)}>
-            <SelectTrigger className="w-[120px] h-10 text-sm rounded-lg">
+              <SelectTrigger className="w-[120px] h-10 text-sm rounded-xl macos-control">
               <SelectValue placeholder="排序" />
             </SelectTrigger>
             <SelectContent>
@@ -485,7 +486,7 @@ export function SessionList({
           <Button
             variant="outline"
             size="icon"
-            className="h-10 w-10 rounded-lg"
+            className="h-10 w-10 rounded-xl macos-control"
             onClick={handleToggleSort}
           >
             {sortOrder === 'asc' ? (
@@ -529,7 +530,7 @@ export function SessionList({
 
         <div className="flex flex-wrap items-center gap-2 sm:justify-end">
           {batchMode && (
-            <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-black/[0.06] bg-black/[0.02] px-2 py-1.5 dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="flex flex-wrap items-center gap-2 rounded-[18px] border border-black/[0.06] bg-white/[0.44] px-2 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] dark:border-white/[0.08] dark:bg-white/[0.035]">
               <Button
                 variant="ghost"
                 size="sm"
@@ -635,17 +636,25 @@ export function SessionList({
                 * 已注销 / 已删好友的历史会话。
                 */}
               {UIN_PATTERN.test(search.trim()) && onOpenTaskWizard && (
-                <QqLookupCard
-                  initialUin={search.trim()}
-                  onStartExport={(preset) => onOpenTaskWizard(preset)}
-                  onPreview={onPreviewChat ? (peer, name) => onPreviewChat('friend', peer.peerUid, name, peer) : undefined}
-                />
+                <div className="space-y-3">
+                  {type !== 'group' && (
+                    <QqLookupCard
+                      initialUin={search.trim()}
+                      onStartExport={(preset) => onOpenTaskWizard(preset)}
+                      onPreview={onPreviewChat ? (peer, name) => onPreviewChat('friend', peer.peerUid, name, peer) : undefined}
+                    />
+                  )}
+                  <GroupLookupCard
+                    initialGroupCode={search.trim()}
+                    onStartExport={(preset) => onOpenTaskWizard(preset)}
+                  />
+                </div>
               )}
             </>
           )}
         </div>
       ) : (
-        <div className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
+        <div className="space-y-1 rounded-[18px] border border-black/[0.055] bg-white/[0.32] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:border-white/[0.065] dark:bg-white/[0.025]">
           {paginatedItems.map(renderSessionItem)}
         </div>
       )}
@@ -669,7 +678,7 @@ export function SessionList({
           <div className="flex items-center gap-1.5">
             <span className="text-sm text-muted-foreground/60">每页</span>
             <Select value={pageSize.toString()} onValueChange={(v: string) => setPageSize(Number(v))}>
-              <SelectTrigger className="w-[72px] h-8 text-sm rounded-lg">
+              <SelectTrigger className="w-[72px] h-8 text-sm rounded-xl macos-control">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -687,7 +696,7 @@ export function SessionList({
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-lg"
+              className="h-8 w-8 rounded-xl macos-control"
               disabled={page === 1}
               onClick={() => setPage(1)}
             >
@@ -696,7 +705,7 @@ export function SessionList({
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-lg"
+              className="h-8 w-8 rounded-xl macos-control"
               disabled={!hasPrevPage}
               onClick={() => setPage(page - 1)}
             >
@@ -712,7 +721,7 @@ export function SessionList({
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-lg"
+              className="h-8 w-8 rounded-xl macos-control"
               disabled={!hasNextPage}
               onClick={() => setPage(page + 1)}
             >
@@ -721,7 +730,7 @@ export function SessionList({
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-lg"
+              className="h-8 w-8 rounded-xl macos-control"
               disabled={page === totalPages}
               onClick={() => setPage(totalPages)}
             >

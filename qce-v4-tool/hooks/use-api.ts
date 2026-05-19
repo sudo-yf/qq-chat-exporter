@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react"
 import type { APIResponse } from "@/types/api"
 import AuthManager from "@/lib/auth"
+import { getAuthPath } from "@/lib/app-path"
 
 function getApiBase() {
   if (typeof window !== "undefined") {
@@ -39,7 +40,7 @@ export function useApi() {
     // 如果返回401或403，清除token并重定向（双重保险）
     if (response.status === 401 || response.status === 403) {
       authManager.clearToken()
-      window.location.href = '/qce-v4-tool/auth'
+      window.location.replace(getAuthPath())
       const data = await response.json()
       throw new Error(data.error?.message || `HTTP ${response.status}`)
     }
