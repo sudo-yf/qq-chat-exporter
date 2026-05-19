@@ -1,47 +1,72 @@
 # QQ Chat Exporter
 
-将 QQ 聊天记录导出为 HTML、JSON、TXT 格式。支持定时备份、批量导出、表情包导出。
+QQ Chat Exporter（QCE）是一个 QQ 聊天记录导出工具，可将好友/群聊记录导出为 HTML、JSON、TXT、XLSX 等格式，并尽量保留图片、视频、文件等资源。
 
-![hero](https://github.com/shuakami/qq-chat-exporter/blob/9959f84b/image.png?raw=true)
+![预览图](./image.png)
 
-## 文档
+> 这是一个带 macOS 优化的版本：增加了菜单栏启动器、Mac 风格 UI 和一键启动/停止能力。
 
-访问 https://shuakami.github.io/qq-chat-exporter/ 查看使用文档。
+## 主要特性
+
+- 导出好友和群聊消息
+- 支持 HTML / JSON / TXT / Excel
+- 图片、视频、文件等媒体资源可一起导出
+- 批量导出、定时备份
+- macOS 菜单栏启动器：打开网页、启动、停止、退出
+- Mac 风格前端界面优化
 
 ## 快速开始
 
-1. 从 [Releases](https://github.com/shuakami/qq-chat-exporter/releases) 下载
-2. 运行 `launcher-user.bat` (Windows) 或 `./launcher-user.sh` (Linux)
-3. 用 QQ 扫码登录
-4. 复制控制台的 Token
-5. 打开 `http://localhost:40653/qce-v4-tool`
+### Windows / Linux
 
-### Docker NapCat 部署
+1. 前往 [Releases](https://github.com/sudo-yf/qq-chat-exporter/releases) 下载对应平台压缩包
+2. 解压后运行：
+   - Windows：`launcher-user.bat`
+   - Linux：`./launcher-user.sh`
+3. 打开 Web 界面 `http://127.0.0.1:40653/qce-v4-tool`，按终端输出的 Access Token 登录后开始导出
 
-如果已有 Docker 部署的 NapCat（Shell 模式），可以作为插件直接挂载，无需桌面 QQNT 环境。
+### macOS
 
-详见 [Docker NapCat 部署指南](docs/docker-napcat-deployment.md)。
+1. 解压项目后，双击 `打开真实QQ导出器.command`
+2. 右上角会出现菜单栏图标
+3. 点击图标即可：
+   - 打开网页
+   - 启动 QCE
+   - 停止 QCE
+   - 停止并退出
+4. 正常情况下不需要盯着 Terminal 窗口
 
-## 相关项目
+> macOS 版会自动读取 `~/.qq-chat-exporter/security.json` 中的 accessToken。
 
-如果导出聊天记录后，想深入分析聊天内容可以试试 [ChatLab](https://chatlab.fun/cn)
+## Web 入口
 
-也可以试试 [QQChatAnalyzer](https://github.com/CutrelyAlex/QQChatAnalyzer) - 支持个人分析、群聊分析、社交网络可视化和 AI 摘要
+- 默认页面：`http://127.0.0.1:40653/qce-v4-tool`
+- 如果页面打不开，先确认本机 QCE 是否已经启动
 
-还可以试试 [QQ-Chat-AI-Analyzer](https://github.com/JUSTMONIKA2022/QQ-Chat-AI-Analyzer) - 基于 AI 的群聊消息总结分析工具，可生成年度报告
+## Access Token
 
-如果需要 Python API 封装，可以使用 [napcat-qce-python](https://github.com/streetartist/napcat-qce-python)
+- Windows / Linux：启动后会在终端里输出 Access Token，也可以查看 `~/.qq-chat-exporter/security.json` 里的 `accessToken` 字段
+- macOS：菜单栏启动器会自动读取 `~/.qq-chat-exporter/security.json`，通常不需要手动复制 token
+
+## 文档
+
+- 使用手册：`docs/guide.md`
+- Docker NapCat 部署：`docs/docker-napcat-deployment.md`
+- 问题反馈：`docs/feedback.md`
+- 贡献指南：`docs/contributing.md`
+
+## 项目结构
+
+- `qce-v4-tool/`：前端 Web 界面
+- `qce-statusbar/`：macOS 菜单栏启动器
+- `NapCat-QCE-macOS-arm64/`：macOS 运行包
+- `qce-viewer/`：导出的聊天记录查看器
+- `docs/`：使用文档
 
 ## 致谢
 
 感谢 [NapCatQQ](https://github.com/NapNeko/NapCatQQ) 团队提供的框架支持。
 
-<a href="https://github.com/shuakami/qq-chat-exporter/graphs/contributors">
-
-  <img src="https://contrib.rocks/image?repo=shuakami/qq-chat-exporter&max=12&columns=12" width="125" />
-
-</a>
-
 ## 许可证
 
-[GPL-3.0](https://github.com/shuakami/qq-chat-exporter/blob/main/LICENSE)
+[GPL-3.0](https://github.com/sudo-yf/qq-chat-exporter/blob/main/LICENSE)
